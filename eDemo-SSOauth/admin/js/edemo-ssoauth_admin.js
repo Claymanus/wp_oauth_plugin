@@ -90,22 +90,23 @@ function SSO(test) {
 		my_iframe.src=target_url; 
 	}
 	
+	SSO.prototype.AjaxAction = function(action){}
+
 	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 	var eventer = window[eventMethod];
 	var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 	eventer( messageEvent, function(e) {
 		var key = e.message ? "message" : "data";
-		switch (e[key]) {
-			case "reload":
-				if ( -1 == window.location.href.indexOf("wp-login.php") ) window.location.reload();
-				else window.location.href=window.location.origin;
-				break;
-			case "hide":
-				jQuery("#eDemoSSO_message_frame").hide('slow');
-		}
+		if ("reload"==e[key]) window.location.reload();
+		if ("hide"==e[key]) jQuery("#eDemoSSO_message_frame").hide('slow');
 	},false);
-
+	
+	jQuery('document').ready(function() {
+		jQuery(".notice").click(function (){jQuery(this).hide('slow')});
+		jQuery("body").append('<div id="eDemoSSO_message_frame"></div>')
+		});
+	console.log('SSO is ready')
 }
-
+console.log('SSO loaded')
 eDemo_SSO = new SSO();
 
